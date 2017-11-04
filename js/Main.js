@@ -17,4 +17,4 @@ const Main = {
 	}
 };
 
-module.exports = Main;
+// module.exports = Main;

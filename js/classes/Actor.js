@@ -35,6 +35,7 @@ class Actor {
 		this.offsets = {};
 
 		this.tick = this.tick.bind(this);
+		this.move = this.move.bind(this);
 
 		this.spawn();
 
@@ -149,6 +150,25 @@ class Actor {
 		}
 		el.src = `res/baron/${name}.png`; //FIXME:!!!
 	}
+
+	move(direction, speed) {
+		switch (direction) {
+		case 0: //up
+			this.y -= speed / 10;
+			break;
+		case 1: //right
+			this.x += speed / 10;
+			break;
+		case 2: //down
+			this.y += speed / 10;
+			break;
+		case 3: //left
+			this.x -= speed / 10;
+			break;
+		default:
+			return console.warn('API.move() direction is not in [0,3]');
+		}
+	}
 }
 
-module.exports = Actor;
+// module.exports = Actor;

@@ -21,19 +21,23 @@ class Baron extends Actor{
 			'spawn:',
 			[
 				'bossa1',
-				6
+				6,
+				[[this.move, 2, 50]]
 			],
 			[
 				'bossb1',
-				6
+				6,
+				[[this.move, 2, 50]]
 			],
 			[
 				'bossc1',
-				6
+				6,
+				[[this.move, 2, 50]]
 			],
 			[
 				'bossd1',
-				6
+				6,
+				[[this.move, 2, 50]]
 			],
 			'loop'
 		];
@@ -49,4 +53,4 @@ class Baron extends Actor{
 	}
 }
 
-module.exports = Baron;
+// module.exports = Baron;
