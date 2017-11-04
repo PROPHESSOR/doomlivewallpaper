@@ -4,7 +4,7 @@ const Actor = require('./Actor');
 
 class Baron extends Actor{
 	constructor(spawnxy){
-		const sprite_folder = "baron";
+		const sprite_folder = 'baron';
 		const params = {
 			sounds:{
 				'fire': 'DSFIRSHT',

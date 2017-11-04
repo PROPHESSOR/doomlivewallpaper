@@ -22,8 +22,13 @@ class Actor {
 
 	render(x, y) {} //eslint-disable-line
 
-	sound(name){
-		//TODO:
+	sound(sound, loop = false){ //TODO: Проверка на наличие кодека
+		if(!sound) return console.warn('Нет звука для воспроизвидения!');
+		const name = this.sounds[sound] || sound;
+		const player = $('#player')[0];
+		player.src = `res/sounds/${name}.ogg`;
+		player.loop = loop;
+		player.play();
 	}
 }
 
