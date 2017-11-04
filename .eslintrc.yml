@@ -1,0 +1,67 @@
+env:
+  browser: true
+  commonjs: true
+  es6: true
+  node: true
+extends: 'eslint:recommended'
+
+globals:
+  debug: true
+  __SYSCALL: true
+  runtime: true
+  $$: true
+  PERSISTENCE: true
+  performance: true
+
+rules:
+  strict:
+    - 2
+    - 'global'
+  max-len:
+    - 1
+    -
+      code: 100
+      tabWidth: 4
+      ignoreComments: true
+      ignoreUrls: true
+  consistent-return: 0
+  no-underscore-dangle: 0
+  global-require: 0
+  import/no-extraneous-dependencies: 0
+  no-return-assign: 1
+  new-cap: 1
+  no-console: 0
+  wrap-iife:
+    - 2
+    - 'inside'
+  no-use-before-define:
+    - 2
+    -
+      functions: false
+      classes: true
+  no-param-reassign: 0
+  indent:
+    - error
+    - tab
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+
+parserOptions:
+  ecmaVersion: 6
+  sourceType: 'script'
+  ecmaFeatures:
+    modules: false
+    defaultParams: true
+    classes: true
+    arrowFunctions: true
+    blockBindings: true
+    forOf: true
+    spread: true
+    templateStrings: true
