@@ -1,0 +1,28 @@
+{
+  "name": "doomlivewallpaper",
+  "version": "1.0.0",
+  "description": "It's a DooM!!!",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PROPHESSOR/doomlivewallpaper.git"
+  },
+  "keywords": [
+    "doom",
+    "html",
+    "wallpaper"
+  ],
+  "author": "PROPHESSOR, UsernameAK",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/PROPHESSOR/doomlivewallpaper/issues"
+  },
+  "homepage": "https://github.com/PROPHESSOR/doomlivewallpaper#readme",
+  "window":{
+    "width":640,
+    "height":480
+  }
+}
