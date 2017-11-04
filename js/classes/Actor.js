@@ -28,56 +28,54 @@ class Actor {
 		this.updateState(0);
 	}
 
-	spawn(x,y){
-		this.render(x,y);
+	spawn(x, y) {
+		this.render(x, y);
 
 	}
 
 	render(x, y) {} //eslint-disable-line
 
-	sound(sound, loop = false){ //TODO: Проверка на наличие кодека
-		if(!sound) return console.warn('Нет звука для воспроизвидения!');
+	sound(sound, loop = false) { //TODO: Проверка на наличие кодека
+		if (!sound) return console.warn('Нет звука для воспроизвидения!');
 		const name = this.sounds[sound] || sound;
 		const player = $('#player')[0];
 		player.src = `res/sounds/${name}.ogg`;
 		player.loop = loop;
 		player.play();
 	}
-	
+
 	findState(name) {
 		name += ':';
-		for(let i = 0; i < this.states; i++) {
-			if(this.states[i] == name) return i;
+		for (let i = 0; i < this.states; i++) {
+			if (this.states[i] == name) return i;
 		}
 		return null;
 	}
 
 	gotoState(name) {
 		this.statePtr = this.findState(name);
-		if(!this.statePtr) return console.warn('Unknown state ' + name);
+		if (!this.statePtr) return console.warn('Unknown state ' + name);
 		this.stateName = name;
 		this.isGoto = true;
 	}
 
 	getStateTime() {
 		const state = this.states[this.statePtr];
-		if(Array.isArray(state)) {
+		if (Array.isArray(state)) {
 			return state[1];
 		}
 		return 0;
 	}
 
 	updateState(time) {
-		if(this.timer) {
+		if (this.timer) {
 			try {
 				clearTimeout(this.timer);
-			} catch(e) {
+			} catch (e) {
 				// ignore
 			}
 		}
-		if(time < 0) {
-			// do nothing
-		} else if(!time) {
+		if (!time || time < 0) {
 			this.tick();
 		} else {
 			this.timer = setTimeout(this.tick, this.getStateTime());
@@ -86,36 +84,33 @@ class Actor {
 
 	tick() {
 		const state = this.states[this.statePtr];
-		if(typeof state == 'string') {
-			if(state == 'loop') {
+		if (typeof state == 'string') {
+			if (state == 'loop') {
 				this.gotoState(this.stateName);
 				this.updateState(0);
-			} else if(state[0] == ':') {
+			} else if (state[0] == ':') {
 				this.gotoState(state.slice(1));
 				this.updateState(0);
-			} else if(state.slice(-1) == ':') {
+			} else if (state.slice(-1) == ':') {
 				this.statePtr++;
 				this.updateState(0);
 				return;
 			}
 		} else {
 			this.setSprite(state[0]);
-			for(let i = 0; i < state[2].length; i++) {
+			for (let i = 0; i < state[2].length; i++) {
 				state[2][i][0](...(state[2][i].slice(1)));
 			}
 		}
 		const time = state[1];
-		if(!this.isGoto) {
-			this.statePtr++;
-		}
+		if (!this.isGoto) this.statePtr++;
+		if (time < 0) return;
 		this.updateState(time);
 	}
 
 	setSprite(name) {
 		// TODO: implement
 	}
-
-	render(x, y) {} //eslint-disable-line=
 }
 
 module.exports = Actor;
