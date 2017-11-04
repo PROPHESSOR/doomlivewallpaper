@@ -10,6 +10,10 @@ const Main = {
 		render(name = 'bg1'){
 			$('#main').css('background-image', `url(res/bg/${name}.jpg)`);
 		}
+	},
+
+	gameLoop(){
+		//TODO: Научиться кодить игры
 	}
 };
 

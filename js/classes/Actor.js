@@ -5,6 +5,9 @@ class Actor {
 		this.sprite_folder = sprite_folder;
 		this._params = params;
 		this._spawn = spawn;
+		this.element = Actor.createActorElement();
+		this.x = spawn[0];
+		this.y = spawn[1];
 
 		this.sounds = params.sounds || {
 			'fire': null,
@@ -13,6 +16,11 @@ class Actor {
 			'death': null,
 			'idle': null,
 		};
+
+		this.sprites = params.sprite || {
+			
+		};
+
 		this.timer = null;
 		this.states = [
 			'spawn:', // State label
@@ -23,17 +31,34 @@ class Actor {
 			],
 			'loop',
 		];
+
+		this.tick = this.tick.bind(this);
+
+		this.spawn(this.x,this.y);
+		// this.setSprite('bossa1');
+	}
+
+	initStates() {
 		this.gotoState('spawn');
 		this.isGoto = false;
 		this.updateState(0);
 	}
 
-	spawn(x, y) {
-		this.render(x, y);
-
+	static createActorElement(){
+		return document.createElement('img');
 	}
 
-	render(x, y) {} //eslint-disable-line
+	spawn(x, y) {
+		this.element.style.position = 'absolute';
+		this.element.style.left = `${x}px`;
+		this.element.style.top = `${y}px`;
+		$('#main').append(this.element);
+	}
+
+	render(x, y) {
+		this.element.style.left = `${x}px`;
+		this.element.style.top = `${y}px`;
+	}
 
 	sound(sound, loop = false) { //TODO: Проверка на наличие кодека
 		if (!sound) return console.warn('Нет звука для воспроизвидения!');
@@ -83,6 +108,7 @@ class Actor {
 	}
 
 	tick() {
+		console.log(this.statePtr);
 		const state = this.states[this.statePtr];
 		if (typeof state == 'string') {
 			if (state == 'loop') {
@@ -109,7 +135,8 @@ class Actor {
 	}
 
 	setSprite(name) {
-		// TODO: implement
+		let el = this.element;
+		el.src = `res/baron/${name}.png`; //FIXME:!!!
 	}
 }
 

@@ -1,10 +1,10 @@
 'use strict';
 
-const Main = require('./js/Main');
-global.$ = $;
+// const Main = require('./js/Main');
+// global.$ = $;
 
 Main.run();
 
-const Baron = new(require('./js/classes/Baron'));
-
-Baron.sound('punch', false);
+// const _Baron = require('./js/classes/Baron');
+let baron = new _Baron();
+// Baron.sound('punch', false);

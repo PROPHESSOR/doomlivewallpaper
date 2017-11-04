@@ -1,6 +1,6 @@
 'use strict';
 
-const Actor = require('./Actor');
+// const Actor = require('./Actor');
 
 class Baron extends Actor{
 	constructor(spawnxy){
@@ -16,6 +16,17 @@ class Baron extends Actor{
 		};
 		const spawn = spawnxy || [0,0];
 		super(sprite_folder, params, spawn);
+
+		this.states = [
+			'spawn:',
+			[
+				'bossa1',
+				-1
+			],
+			'loop'
+		];
+
+		this.initStates();
 	}
 }
 
