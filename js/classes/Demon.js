@@ -2,10 +2,10 @@
 
 const Actor = require('./Actor');
 
-class Zombie extends Actor{
+class Demon extends Actor{
 	constructor(){
 		super();
 	}
 }
 
-module.exports = Zombie;
+module.exports = Demon;
