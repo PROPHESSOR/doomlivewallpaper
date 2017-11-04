@@ -32,7 +32,7 @@ class Actor {
 			'loop',
 		];
 
-		this.offsets = [];
+		this.offsets = {};
 
 		this.tick = this.tick.bind(this);
 
@@ -106,7 +106,7 @@ class Actor {
 		if (!time || time < 0) {
 			this.tick();
 		} else {
-			this.timer = setTimeout(this.tick, this.getStateTime());
+			this.timer = setTimeout(this.tick, time);
 		}
 	}
 
@@ -132,7 +132,7 @@ class Actor {
 					state[2][i][0](...(state[2][i].slice(1)));
 				}
 		}
-		const time = state[1];
+		const time = this.getStateTime();
 		!this.isGoto ? this.statePtr++ : this.isGoto = false;
 		if (time < 0) return;
 		this.updateState(time);
