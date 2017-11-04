@@ -7,11 +7,8 @@ extends: 'eslint:recommended'
 
 globals:
   debug: true
-  __SYSCALL: true
-  runtime: true
-  $$: true
-  PERSISTENCE: true
-  performance: true
+  $: true
+  jQuery: true
 
 rules:
   strict:
