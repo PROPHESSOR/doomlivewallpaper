@@ -21,10 +21,29 @@ class Baron extends Actor{
 			'spawn:',
 			[
 				'bossa1',
-				-1
+				6
+			],
+			[
+				'bossb1',
+				6
+			],
+			[
+				'bossc1',
+				6
+			],
+			[
+				'bossd1',
+				6
 			],
 			'loop'
 		];
+	
+		this.offsets = {
+			bossa1:[-19,-69],
+			bossb1:[-23,-72],
+			bossc1:[-20,-69],
+			bossd1:[-24,-72],
+		};
 
 		this.initStates();
 	}

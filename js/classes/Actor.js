@@ -18,7 +18,7 @@ class Actor {
 		};
 
 		this.sprites = params.sprite || {
-			
+
 		};
 
 		this.timer = null;
@@ -32,9 +32,14 @@ class Actor {
 			'loop',
 		];
 
+		this.offsets = [];
+
 		this.tick = this.tick.bind(this);
 
-		this.spawn(this.x,this.y);
+		this.spawn();
+
+
+
 		// this.setSprite('bossa1');
 	}
 
@@ -44,14 +49,12 @@ class Actor {
 		this.updateState(0);
 	}
 
-	static createActorElement(){
+	static createActorElement() {
 		return document.createElement('img');
 	}
 
-	spawn(x, y) {
+	spawn() {
 		this.element.style.position = 'absolute';
-		this.element.style.left = `${x}px`;
-		this.element.style.top = `${y}px`;
 		$('#main').append(this.element);
 	}
 
@@ -71,7 +74,7 @@ class Actor {
 
 	findState(name) {
 		name += ':';
-		for (let i = 0; i < this.states; i++) {
+		for (const i in this.states) {
 			if (this.states[i] == name) return i;
 		}
 		return null;
@@ -87,7 +90,7 @@ class Actor {
 	getStateTime() {
 		const state = this.states[this.statePtr];
 		if (Array.isArray(state)) {
-			return state[1];
+			return state[1] / 35 * 1000;
 		}
 		return 0;
 	}
@@ -124,18 +127,26 @@ class Actor {
 			}
 		} else {
 			this.setSprite(state[0]);
-			for (let i = 0; i < state[2].length; i++) {
-				state[2][i][0](...(state[2][i].slice(1)));
-			}
+			if (state[2])
+				for (let i = 0; i < state[2].length; i++) {
+					state[2][i][0](...(state[2][i].slice(1)));
+				}
 		}
 		const time = state[1];
-		if (!this.isGoto) this.statePtr++;
+		!this.isGoto ? this.statePtr++ : this.isGoto = false;
 		if (time < 0) return;
 		this.updateState(time);
 	}
 
 	setSprite(name) {
 		let el = this.element;
+		if (!name) return void(el.style.display = 'none');
+		el.style.display = '';
+		if(this.offsets[name]) {
+			this.render(this.x + this.offsets[name][0], this.y + this.offsets[name][1]);
+		} else {
+			this.render(this.x, this.y);
+		}
 		el.src = `res/baron/${name}.png`; //FIXME:!!!
 	}
 }
