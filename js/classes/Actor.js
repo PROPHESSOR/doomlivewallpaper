@@ -6,17 +6,25 @@ class Actor {
 		this._params = params;
 		this._spawn = spawn;
 
-		this.states = [
-			[
-				null, // Sprite name (null = no sprite)
-				-1 // animation length (-1 = infinite)
-			]
-		];
+		this.sounds = params.sounds || {
+			'fire': null,
+			'punch': null,
+			'alert': null,
+			'death': null,
+			'idle': null,
+		};
+	}
+
+	spawn(x,y){
+		this.render(x,y);
+
 	}
 
 	render(x, y) {} //eslint-disable-line
 
-
+	sound(name){
+		//TODO:
+	}
 }
 
 module.exports = Actor;
