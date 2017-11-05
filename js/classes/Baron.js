@@ -22,18 +22,20 @@ class Baron extends Actor{
 			[
 				'bosse1',
 				6,
-				[[()=>this.move(this.calculateDirection(DoomGuy), 30)]]
+				[
+					// [this.move, this.calculateDirection(DoomGuy), 30],
+				]
 			],
 			[
 				'bossf1',
 				6,
-				[[() => this.move(this.calculateDirection(DoomGuy), 30)]],
+				// [[this.move, this.calculateDirection(DoomGuy), 30]]
 			],
 			[
 				'bossg1',
 				6,
 				[
-					[() => this.move(this.calculateDirection(DoomGuy), 30)],
+					// [this.move, this.calculateDirection(DoomGuy), 30],
 					// [this.sound, 'idle']
 					[()=>new Projectile([this.x,this.y])],
 					[this.sound, 'fire']
