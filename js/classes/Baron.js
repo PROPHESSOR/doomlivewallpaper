@@ -20,25 +20,39 @@ class Baron extends Actor{
 		this.states = [
 			'spawn:',
 			[
-				'bossa1',
+				'bosse1',
 				6,
-				[[this.move, 2, 50]]
+				[
+					// [this.move, this.calculateDirection(DoomGuy), 30],
+				]
 			],
 			[
-				'bossb1',
+				'bossf1',
 				6,
-				[[this.move, 2, 50]]
+				// [[this.move, this.calculateDirection(DoomGuy), 30]]
 			],
 			[
-				'bossc1',
+				'bossg1',
 				6,
-				[[this.move, 2, 50]]
+				[
+					// [this.move, this.calculateDirection(DoomGuy), 30],
+					// [this.sound, 'idle']
+					[()=>new Projectile([this.x,this.y])],
+					[this.sound, 'fire']
+				]
 			],
-			[
-				'bossd1',
-				6,
-				[[this.move, 2, 50]]
-			],
+			// [
+			// 	'bossd1',
+			// 	6,
+			// 	// [[this.move, this.calculateDirection(DoomGuy), 30]]
+			// ],
+			// [
+			// 	'bossd1',
+			// 	6,
+			// 	// [[this.move, this.calculateDirection(DoomGuy), 30]]
+			// 	[()=>new Projectile([this.x,this.y])],
+			// 	[this.sound, 'fire']
+			// ],
 			'loop'
 		];
 	

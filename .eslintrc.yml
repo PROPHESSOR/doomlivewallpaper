@@ -1,6 +1,6 @@
 env:
   browser: true
-  commonjs: true
+  commonjs: false
   es6: true
   node: true
 extends: 'eslint:recommended'
@@ -9,6 +9,9 @@ globals:
   debug: true
   $: true
   jQuery: true
+  Actor: true
+  Baron: true
+  Projectile: true
 
 rules:
   strict:
@@ -28,6 +31,8 @@ rules:
   no-return-assign: 1
   new-cap: 1
   no-console: 0
+  no-undef: 0 #TODO:
+  no-unused-vars: 0 #TODO:
   wrap-iife:
     - 2
     - 'inside'
@@ -36,7 +41,7 @@ rules:
     -
       functions: false
       classes: true
-  no-param-reassign: 0
+  no-param-reassign: 1
   indent:
     - error
     - tab
