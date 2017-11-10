@@ -261,6 +261,22 @@ class Actor {
 
 		return name + letters[animation] + direction;
 	}
+
+	static get IDLE(){
+		return 'IDLE'; //TODO: Сделать объекты с разными свойствами
+	}
+
+	static get SHOOTING(){
+		return 'SHOOTING';
+	}
+
+	static get WALKING(){
+		return 'WALKING';
+	}
+
+	static get DIED(){
+		return 'DIED';
+	}
 	//endregion static
 }
 
