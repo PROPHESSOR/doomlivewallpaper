@@ -1,26 +1,23 @@
 'use strict';
 
 class Actor {
-	constructor(sprite_folder = '', params = {}, spawn = []) {
-		this.sprite_folder = sprite_folder;
+	constructor(spriteFolder = '', params = {}, spawn = []) {
+		this.spriteFolder = spriteFolder;
 		this._params = params;
 		this._spawn = spawn;
 		this.element = Actor.createActorElement();
-		this.x = spawn[0];
-		this.y = spawn[1];
+		[this.x, this.y] = spawn;
 		this.direction = params.direction || 1;
 
 		this.sounds = params.sounds || {
-			'fire': null,
-			'punch': null,
 			'alert': null,
 			'death': null,
-			'idle': null,
+			'fire': null,
+			'punch': null,
+			'idle': null
 		};
 
-		this.sprites = params.sprite || {
-
-		};
+		this.sprites = params.sprite || {};
 
 		this.timer = null;
 		this.states = [
@@ -28,9 +25,9 @@ class Actor {
 			[
 				null, // Sprite name (null = no sprite)
 				-1, // animation length (-1 = infinite)
-				[], // code pointers
+				[] // code pointers
 			],
-			'loop',
+			'loop'
 		];
 
 		this.offsets = {};
@@ -46,7 +43,6 @@ class Actor {
 		this.spawn();
 
 
-
 		// this.setSprite('bossa1');
 	}
 
@@ -55,51 +51,16 @@ class Actor {
 		this.isGoto = false;
 		this.updateState(0);
 	}
-	//region static
-	static createActorElement() {
-		return document.createElement('img');
-	}
 
-	static reverseDirection(direction){
-		return 180 - direction;
-	}
+	reverseDirection() {
+		this.direction = Actor.reverseDirection(this.angle);
 
-	static calculateDirection(actor, target) {
-		//На опережение
-		let angle; // = Math.atan2(this.xSpeed, -this.ySpeed) * 180. / Math.PI;
-		let direction;
-		// if (target.state == Actor.WALKING || target.state == Actor.SHOOTING) { //x/yLoc
-		angle = Math.atan2(target.x - actor.x, -(target.y - actor.y));
-		// }
-
-		return angle;
-	}
-
-	static calculateDistance(actor, target) {
-		//Модуль вектора this -> actor
-		return Math.sqrt(Math.pow(target.x - actor.x, 2) + Math.pow(target.y - actor.y, 2));
-	}
-	//endregion static
-
-	reverseDirection(){
-		this.direction = Actor.reverseDirection(this.direction);
 		return this.direction;
 	}
 
-	calculateDirection(target) {
-		//На опережение
-		let angle; // = Math.atan2(this.xSpeed, -this.ySpeed) * 180. / Math.PI;
-
-		// if (target.state == Actor.WALKING || target.state == Actor.SHOOTING) { //x/yLoc
-		angle = Math.atan2(target.x - this.x, -(target.y - this.y));
-		// }
-
-		return angle;
-	}
-
-	calculateDistance(actor) {
-		//Модуль вектора this -> actor
-		return Math.sqrt(Math.pow(actor.x - this.x, 2) + Math.pow(actor.y - this.y, 2));
+	turnTo(target) {
+		this.angle = Math.atan2(target.x - this.x, -(target.y - this.y));
+		this.direction = Actor.angle2direction(this.angle);
 	}
 
 	spawn() {
@@ -113,34 +74,44 @@ class Actor {
 	}
 
 	sound(sound, loop = false) { //TODO: Проверка на наличие кодека
-		if (!sound) return console.warn('Нет звука для воспроизвидения!');
+		if (!sound) {
+			return console.warn('Нет звука для воспроизвидения!');
+		}
 		const name = this.sounds[sound] || sound;
-		const player = $('#player')[0];
+		const [player] = $('#player');
+
 		player.src = `res/sounds/${name}.ogg`;
 		player.loop = loop;
 		player.play();
 	}
 
 	findState(name) {
-		name += ':';//eslint-disable-line
+		name += ':'; //eslint-disable-line
 		for (const i in this.states) {
-			if (this.states[i] == name) return i;
+			if (this.states[i] === name) {
+				return i;
+			}
 		}
+
 		return null;
 	}
 
 	gotoState(name) {
 		this.statePtr = this.findState(name);
-		if (!this.statePtr) return console.warn('Unknown state ' + name);
+		if (!this.statePtr) {
+			return console.warn(`Unknown state ${name}`);
+		}
 		this.stateName = name;
 		this.isGoto = true;
 	}
 
 	getStateTime() {
 		const state = this.states[this.statePtr];
+
 		if (Array.isArray(state)) {
 			return state[1] / 35 * 1000;
 		}
+
 		return 0;
 	}
 
@@ -155,56 +126,142 @@ class Actor {
 		if (!time || time < 0) {
 			this.tick();
 		} else {
-			this.timer = setTimeout(/*()=>*/this.tick/* () */, time);
+			this.timer = setTimeout(this.tick, time);
 		}
 	}
 
 	tick() {
 		console.log(this.statePtr);
 		const state = this.states[this.statePtr];
-		if (typeof state == 'string') {
-			if (state == 'loop') {
+
+		if (typeof state === 'string') {
+			if (state === 'loop') {
 				this.gotoState(this.stateName);
 				this.updateState(0);
-			} else if (state[0] == ':') {
+			} else if (state[0] === ':') {
 				this.gotoState(state.slice(1));
 				this.updateState(0);
-			} else if (state.slice(-1) == ':') {
+			} else if (state.slice(-1) === ':') {
 				this.statePtr++;
 				this.updateState(0);
+
 				return;
 			}
 		} else {
-			this.setSprite(state[0]);
-			if (state[2])
+			if (typeof state[0] === 'string') {
+				this.setSprite(state[0]);
+			} else if (typeof state[0] === 'function') {
+				this.setSprite(state[0]());
+			} else if (state[0] instanceof Array) {
+				this.setSprite(Actor.getSpriteName(state[0][0], state[0][1], state[0][2]));
+			}
+			if (state[2]) {
 				for (let i = 0; i < state[2].length; i++) {
-					/*()=>*/state[2][i][0](...(state[2][i].slice(1)));
+
+					/*()=>*/
+					state[2][i][0](...state[2][i].slice(1));
 				}
+			}
 		}
 		const time = this.getStateTime();
-		!this.isGoto ? this.statePtr++ : this.isGoto = false;
-		if (time < 0) return;
+
+		!this.isGoto ? this.statePtr++ : this.isGoto = false; // eslint-disable-line
+		//TODO: eslint
+		if (time < 0) {
+			return;
+		}
 		this.updateState(time);
 	}
 
 	setSprite(name) {
 		let el = this.element;
-		if (!name) return void(el.style.display = 'none');
+
+		if (!name) {
+			return void(el.style.display = 'none');
+		}
 		el.style.display = '';
 		if (this.offsets[name]) {
 			this.render(this.x + this.offsets[name][0], this.y + this.offsets[name][1]);
 		} else {
 			this.render(this.x, this.y);
 		}
-		el.src = `res/${this.sprite_folder}/${name}.png`;
+		el.src = `res/${this.spriteFolder}/${name}.png`;
 	}
 
 	move(direction, speed) {
 		let xofs = speed * Math.sin(direction);
 		let yofs = -(speed * Math.cos(direction));
+
 		this.x += xofs;
 		this.y += yofs;
 	}
+
+	//region static
+	static createActorElement() {
+		return document.createElement('img');
+	}
+
+	static reverseDirection(angle) {
+		return this.angle2direction(180 - angle);
+	}
+
+	static angle2direction(angle) {
+		if (angle >= -22.5 && angle <= 22.5) {
+			return 5;
+		}
+		if (angle >= 22.5 && angle <= 67.5) {
+			return 6;
+		}
+		if (angle >= 67.5 && angle <= 112.5) {
+			return 7;
+		}
+		if (angle >= 112.5 && angle <= 157.5) {
+			return 8;
+		}
+		if (angle >= 157.5 || angle <= -157.5) {
+			return 1;
+		}
+		if (angle >= -157.5 && angle <= -112.5) {
+			return 2;
+		}
+		if (angle >= -112.5 && angle <= -67.5) {
+			return 3;
+		}
+		if (angle >= -67.5 && angle <= -22.5) {
+			return 4;
+		}
+		console.warn(`Bad angle ${angle}°`);
+
+		return 1;
+	}
+
+	static calculateDirection(actor, target) {
+		//На опережение
+		let angle = Math.atan2(target.x - actor.x, -(target.y - actor.y)); // = Math.atan2(this.xSpeed, -this.ySpeed) * 180. / Math.PI;
+		let direction = this.angle2direction(angle);
+		// if (target.state == Actor.WALKING || target.state == Actor.SHOOTING) { //x/yLoc
+
+		// angle = Math.atan2(target.x - actor.x, -(target.y - actor.y));
+		// }
+
+		return {
+			angle,
+			direction
+		};
+		// return angle;
+	}
+
+	static calculateDistance(actor, target) {
+		//Модуль вектора this -> actor
+		return Math.sqrt(Math.pow(target.x - actor.x, 2) + Math.pow(target.y - actor.y, 2));
+	}
+
+	static getSpriteName(name, animation = 1, direction = 1) {
+		const letters = [null,'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o'];
+
+		return name + letters[animation] + direction;
+	}
+	//endregion static
 }
 
 // module.exports = Actor;

@@ -2,7 +2,7 @@
 
 class Marine extends Actor{
 	constructor(spawnxy){
-		const sprite_folder = 'marine';
+		const spriteFolder = 'marine';
 		const params = {
 			'sounds': {
 				'fire': 'DSFIRSHT',
@@ -14,34 +14,25 @@ class Marine extends Actor{
 		};
 		const spawn = spawnxy || [0,0];
 
-		super(sprite_folder, params, spawn);
+		super(spriteFolder, params, spawn);
 
 		this.states = [
 			'spawn:',
 			[
 				'playa1',
-				6,
-				[
-					// [this.move, 2, 50]
-				]
+				6
 			],
 			[
 				'playb1',
 				6
-				// [[this.move, 2, 50]]
 			],
 			[
 				'playc1',
-				6,
-				[
-					// [this.move, 2, 50],
-					// [this.sound, 'idle']
-				]
+				6
 			],
 			[
 				'playd1',
 				6
-				// [[this.move, 2, 50]]
 			],
 			'loop'
 		];
@@ -56,5 +47,3 @@ class Marine extends Actor{
 		this.initStates();
 	}
 }
-
-// module.exports = Baron;
