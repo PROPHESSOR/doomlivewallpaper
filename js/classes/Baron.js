@@ -21,17 +21,17 @@ class Baron extends Actor {
 		this.states = [
 			'spawn:',
 			[
-				() => this.setSprite(Actor.getSpriteName('boss',1,this.direction)),
+				() => Actor.getSpriteName('boss',1,this.direction),
 				6,
 				[[this.turnTo, DoomGuy]]
 			],
 			[
-				() => this.setSprite(Actor.getSpriteName('boss',2,this.direction)),
+				() => Actor.getSpriteName('boss',2,this.direction),
 				6,
 				[]
 			],
 			[
-				() => this.setSprite(Actor.getSpriteName('boss',3,this.direction)),
+				() => Actor.getSpriteName('boss',3,this.direction),
 				6,
 				[]
 			],

@@ -38,6 +38,7 @@ class Actor {
 			this.tick = this.tick.bind(this);
 			this.move = this.move.bind(this);
 			this.sound = this.sound.bind(this);
+			this.turnTo = this.turnTo.bind(this);
 		}
 
 		this.spawn();
@@ -60,6 +61,8 @@ class Actor {
 
 	turnTo(target) {
 		this.angle = Math.atan2(target.x - this.x, -(target.y - this.y));
+		// console.log(this.angle);
+		// debugger;
 		this.direction = Actor.angle2direction(this.angle);
 	}
 
@@ -175,7 +178,7 @@ class Actor {
 
 	setSprite(name) {
 		let el = this.element;
-
+		console.log(name);
 		if (!name) {
 			return void(el.style.display = 'none');
 		}
