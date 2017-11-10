@@ -4,15 +4,16 @@ class Projectile extends Actor{
 	constructor(spawnxy){
 		const sprite_folder = 'balls';
 		const params = {
-			sounds:{
+			'sounds': {
 				'fire': null,
 				'punch': null,
 				'alert': 'DSSKEATK',
 				'DSBAREXP': 'DSBRSDTH',
-				'idle': null,
+				'idle': null
 			}
 		};
 		const spawn = spawnxy || [0,0];
+
 		super(sprite_folder, params, spawn);
 
 		this.states = [
@@ -39,9 +40,9 @@ class Projectile extends Actor{
 			// ],
 			'loop'
 		];
-	
+
 		this.offsets = {
-			bal7a1a5:[0,0]
+			'bal7a1a5': [0,0]
 			// bossa1:[-19,-69],
 			// bossb1:[-23,-72],
 			// bossc1:[-20,-69],
