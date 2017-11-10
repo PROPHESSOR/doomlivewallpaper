@@ -21,6 +21,8 @@
     "extends": "eslint:recommended",
     "rules": {
         "no-console": "off",
+        "no-unused-vars": "warn",
+        "no-undef": "warn",
         "accessor-pairs": "error",
         "array-bracket-newline": "error",
         "array-bracket-spacing": [
