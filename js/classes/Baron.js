@@ -23,33 +23,15 @@ class Baron extends Actor {
 			[
 				() => this.setSprite(Actor.getSpriteName('boss',1,this.direction)),
 				6,
-<<<<<<< HEAD
-				[
-					// [this.move, this.calculateDirection(DoomGuy), 30],
-				]
-=======
 				[[this.turnTo, DoomGuy]]
->>>>>>> 6dda28bde6959c85d55294f0df2ea8a653029847
 			],
 			[
 				() => this.setSprite(Actor.getSpriteName('boss',2,this.direction)),
 				6,
-<<<<<<< HEAD
-				// [[this.move, this.calculateDirection(DoomGuy), 30]]
-=======
 				[]
->>>>>>> 6dda28bde6959c85d55294f0df2ea8a653029847
 			],
 			[
 				() => this.setSprite(Actor.getSpriteName('boss',3,this.direction)),
-				6,
-<<<<<<< HEAD
-				[
-=======
-				[]
-			],
-			[
-				() => this.setSprite(Actor.getSpriteName('boss',4,this.direction)),
 				6,
 				[]
 			],
@@ -66,11 +48,9 @@ class Baron extends Actor {
 			[
 				'bossg1',
 				6, [
->>>>>>> 6dda28bde6959c85d55294f0df2ea8a653029847
 					// [this.move, this.calculateDirection(DoomGuy), 30],
 					// [this.sound, 'idle']
 					[() => new Projectile([this.x, this.y], DoomGuy)],
-					[this.sound, 'fire']
 				]
 			],
 			'loop'
