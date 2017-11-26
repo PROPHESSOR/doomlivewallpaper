@@ -1,20 +1,55 @@
 'use strict';
 
-const Main = {
-	run(){
+const DLW = {
+	run() {
 		console.log('Run...');
 		this.Background.render();
 	},
 
-	Background:{
-		render(name = 'bg1'){
-			$('#main').css('background-image', `url(res/bg/${name}.jpg)`);
-		}
-	},
-
-	gameLoop(){
+	gameLoop() {
 		//TODO: Научиться кодить игры
 	}
 };
+
+DLW.Background = {
+	'_bg': '',
+	render(name = 'bg1') {
+		this._bg = name;
+		$('#main').css('background-image', `url(res/bg/${name}.jpg)`);
+	},
+	get(){
+		return this._bg;
+	}
+};
+
+DLW.Wave = {
+	'currentWave': 0,
+	'waveTime': [], //Time in ms for several waves
+	'waves': [ //Demons in each wave
+		[Baron]
+	],
+	wave(){
+		const w = DLW.Wave;
+		const monsters = w.waves[w.currentWave];
+
+		for (const Monster of monsters) {
+			new Monster();
+		}
+
+		w.currentWave++;
+
+		setTimeout(w.wave, w.waveTime[w.currentWave] || w.waveTime[0]);
+	}
+};
+
+// DLW.Engine = new class DLWEngine {
+// 	constructor() {}
+
+// 	spawn(){}
+// }
+
+// DLW.spawn = (val)=>{
+// 	if(!val) return console.warn("[DLW.Spawn] Nothing to spawn!");
+// }
 
 // module.exports = Main;
