@@ -60,10 +60,10 @@ class Actor {
 	}
 
 	turnTo(target) {
-		this.angle = Math.atan2(target.x - this.x, -(target.y - this.y));
-		// console.log(this.angle);
-		// debugger;
-		this.direction = Actor.angle2direction(this.angle);
+		const data = Actor.calculateDirection(this, target);
+
+		this.direction = data.direction;
+		this.angle = data.angle;
 	}
 
 	spawn() {
@@ -134,7 +134,6 @@ class Actor {
 	}
 
 	tick() {
-		console.log(this.statePtr);
 		const state = this.states[this.statePtr];
 
 		if (typeof state === 'string') {
@@ -178,7 +177,7 @@ class Actor {
 
 	setSprite(name) {
 		let el = this.element;
-		console.log(name);
+
 		if (!name) {
 			return void(el.style.display = 'none');
 		}
@@ -192,8 +191,8 @@ class Actor {
 	}
 
 	move(direction, speed) {
-		let xofs = speed * Math.sin(direction);
-		let yofs = -(speed * Math.cos(direction));
+		let xofs = speed * Math.sin(direction * Math.PI / 180);
+		let yofs = -(speed * Math.cos(direction * Math.PI / 180));
 
 		this.x += xofs;
 		this.y += yofs;
@@ -221,7 +220,7 @@ class Actor {
 		if (angle >= 112.5 && angle <= 157.5) {
 			return 8;
 		}
-		if (angle >= 157.5 || angle <= -157.5) {
+		if (angle >= 157.5 && angle <= -157.5) {
 			return 1;
 		}
 		if (angle >= -157.5 && angle <= -112.5) {
@@ -240,7 +239,7 @@ class Actor {
 
 	static calculateDirection(actor, target) {
 		//На опережение
-		let angle = Math.atan2(target.x - actor.x, -(target.y - actor.y)); // = Math.atan2(this.xSpeed, -this.ySpeed) * 180. / Math.PI;
+		let angle = Math.atan2(target.x - actor.x, -(target.y - actor.y)) * 180.0 / Math.PI;
 		let direction = this.angle2direction(angle);
 		// if (target.state == Actor.WALKING || target.state == Actor.SHOOTING) { //x/yLoc
 

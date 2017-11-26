@@ -33,7 +33,7 @@ class Baron extends Actor {
 			[
 				() => Actor.getSpriteName('boss',3,this.direction),
 				6,
-				[]
+				[[() => this.move(this.angle, 30)]]
 			],
 			'loop',
 			'fire:',
@@ -48,20 +48,20 @@ class Baron extends Actor {
 			[
 				'bossg1',
 				6, [
-					// [this.move, this.calculateDirection(DoomGuy), 30],
-					// [this.sound, 'idle']
-					[() => new Projectile([this.x, this.y], DoomGuy)],
+					[this.move, Actor.calculateDirection(this, DoomGuy).angle, 30],
+					//[this.sound, 'idle']
+					[() => new Projectile([this.x, this.y], DoomGuy)]
 				]
 			],
 			'loop'
 		];
 
-		this.offsets = {
+		/*this.offsets = {
 			'bossa1': [-19, -69],
 			'bossb1': [-23, -72],
 			'bossc1': [-20, -69],
 			'bossd1': [-24, -72]
-		};
+		};*/
 
 		this.initStates();
 	}
