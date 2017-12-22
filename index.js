@@ -17,3 +17,8 @@ document.addEventListener('click', function(e){
 	DoomGuy.y = e.pageY;
 	DoomGuy.render();//e.pageX,e.pageY);
 }, false);
+
+document.addEventListener('contextmenu', function(e){
+	e.preventDefault();
+	new Sergeant([innerWidth/4,innerHeight/4]);
+}, false);
