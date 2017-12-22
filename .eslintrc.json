@@ -93,7 +93,7 @@
             "ignoreComments": true,
             "ignoreUrls": true
         }],
-        "max-lines": "error",
+        "max-lines": "off",
         "max-nested-callbacks": "error",
         "max-params": "error",
         "max-statements": "off",
