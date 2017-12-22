@@ -28,6 +28,7 @@ class Actor {
 		[this.x, this.y] = spawn;
 		[this.width, this.height] = [this.element.width, this.element.height];
 		this.direction = params.direction || 1;
+		this._soundChannel = 1;
 
 		this.sounds = params.sounds || {
 			'alert': null,
@@ -117,14 +118,20 @@ class Actor {
 	/** Воспроизвести звук
 	 * @param  {string} sound - Имя файла без расширения (.ogg)
 	 * @param  {bool} loop=false - Циклично?
+	 * @param {number} channel=0 - Канал звука (1-5);
 	 * @returns {undefined} ...
 	 */
-	sound(sound, loop = false) { //TODO: Проверка на наличие кодека
+	sound(sound, loop = false, channel = 0) { //TODO: Проверка на наличие кодека
 		if (!sound) {
 			return console.warn('Нет звука для воспроизвидения!');
 		}
+		if (!channel){
+			channel = this._soundChannel;
+			this._soundChannel++;
+			if (this._soundChannel > 5) this._soundChannel = 1;
+		}
 		const name = this.sounds[sound] || sound;
-		const [player] = $('#player');
+		const [player] = $(`#player${channel}`);
 
 		player.src = `res/sounds/${name}.ogg`;
 		player.loop = loop;
