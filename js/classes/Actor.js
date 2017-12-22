@@ -151,6 +151,7 @@ class Actor {
 		if (!this.statePtr) {
 			return console.warn(`Unknown state ${name}`);
 		}
+		this.prevStateName = this.stateName;
 		this.stateName = name;
 		this.isGoto = true;
 	}
@@ -197,6 +198,9 @@ class Actor {
 			if (state === 'loop') {
 				this.gotoState(this.stateName);
 				this.updateState(0);
+			} else if (state === 'stop'){
+				this.gotoState(this.prevStateName);
+				this.updateState(0);
 			} else if (state[0] === ':') {
 				this.gotoState(state.slice(1));
 				this.updateState(0);
@@ -225,7 +229,6 @@ class Actor {
 		const time = this.getStateTime();
 
 		!this.isGoto ? this.statePtr++ : this.isGoto = false; // eslint-disable-line
-		//TODO: eslint
 		if (time < 0) {
 			return;
 		}
