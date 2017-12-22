@@ -18,50 +18,66 @@ class Baron extends Actor {
 
 		super(spriteFolder, params, spawn);
 
+		/* eslint-disable indent */
 		this.states = [
 			'spawn:',
-			[
-				() => Actor.getSpriteName('boss',1,this.direction),
-				6,
-				[[this.turnTo, DoomGuy]]
-			],
-			[
-				() => Actor.getSpriteName('boss',2,this.direction),
-				6,
-				[]
-			],
-			[
-				() => Actor.getSpriteName('boss',3,this.direction),
-				6,
-				[[() => this.move(this.angle, 30)]]
-			],
-			[
-				() => Actor.getSpriteName('boss',3,this.direction),
-				12,
-				[[() => this.gotoState('fire')]]
-			],
-			'loop',
-			'fire:',
-			[
-				() => Actor.getSpriteName('boss',5,this.direction),//'bosse1',
-				6
-				// [this.sound, 'DSPLASMA', false]
-			],
-			[
-				() => Actor.getSpriteName('boss',6,this.direction),//'bossf1',
-				6
-			],
-			[
-				() => Actor.getSpriteName('boss',7,this.direction),//'bossg1',
-				6,
 				[
-					// [this.move, Actor.calculateDirection(this, DoomGuy).angle, 30],
-					//[this.sound, 'idle']
-					[() => new Projectile([this.x, this.y], DoomGuy)]
-				]
-			],
+					() => Actor.getSpriteName('boss',1,1),
+					6,
+					[[this.sound, 'DSBRSSIT']]
+				],
+				[
+					() => Actor.getSpriteName('boss',1,this.direction),
+					6,
+					[[this.gotoState, 'walk']]
+				],
+			'stop',
+
+			'walk:',
+				[
+					() => Actor.getSpriteName('boss',1,this.direction),
+					6,
+					[[this.turnTo, DoomGuy]]
+				],
+				[
+					() => Actor.getSpriteName('boss',2,this.direction),
+					6,
+					[]
+				],
+				[
+					() => Actor.getSpriteName('boss',3,this.direction),
+					6,
+					[[() => this.move(this.angle, 30)]]
+				],
+				[
+					() => Actor.getSpriteName('boss',3,this.direction),
+					12,
+					[[this.gotoState, 'fire']]
+				],
+			'loop',
+
+			'fire:',
+				[
+					() => Actor.getSpriteName('boss',5,this.direction),//'bosse1',
+					6
+				],
+				[
+					() => Actor.getSpriteName('boss',6,this.direction),//'bossf1',
+					6
+				],
+				[
+					() => Actor.getSpriteName('boss',7,this.direction),//'bossg1',
+					6,
+					[
+						// [this.move, Actor.calculateDirection(this, DoomGuy).angle, 30],
+						//[this.sound, 'idle']
+						[() => new Projectile([this.x, this.y], DoomGuy)],
+						[this.sound, 'DSFIRSHT', false]
+					]
+				],
 			'stop'
 		];
+		/* eslint-enable indent */
 
 		/*this.offsets = {
 			'bossa1': [-19, -69],

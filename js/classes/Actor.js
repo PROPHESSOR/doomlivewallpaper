@@ -59,6 +59,10 @@ class Actor {
 			this.move = this.move.bind(this);
 			this.sound = this.sound.bind(this);
 			this.turnTo = this.turnTo.bind(this);
+			this.findState = this.findState.bind(this);
+			this.gotoState = this.gotoState.bind(this);
+			this.updateState = this.updateState.bind(this);
+			this.setSprite = this.setSprite.bind(this);
 		}
 
 		this.spawn();
