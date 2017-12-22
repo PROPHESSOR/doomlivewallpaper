@@ -104,6 +104,20 @@ class Actor {
 	spawn() {
 		this.element.style.position = 'absolute';
 		$('#main').append(this.element);
+		$(this.element).on('contextmenu', () => {
+			DoomGuy.attack(this);
+		});
+	}
+
+
+	/** Убить актора
+	 */
+	kill() {
+		this.gotoState('death');
+		// setTimeout(() => {
+		// 	console.log('remmove elllement');
+		// 	$(this.element).remove();
+		// }, 1000);
 	}
 
 	/** Отрисовать элемент
@@ -344,7 +358,8 @@ class Actor {
 	 * @returns {object} {angle, direction} - Направление в градусах и id
 	 */
 	static calculateDirection(actor, target) {
-		//На опережение
+		if(!actor || !target) return console.error('У calculateDirection недостаточно аргументов для того, что бы делать свою работу'); //eslint-disable-line
+
 		let angle = Math.atan2(target.x - actor.x, -(target.y - actor.y)) * 180.0 / Math.PI;
 		let direction = this.angle2direction(angle);
 		// if (target.state == Actor.WALKING || target.state == Actor.SHOOTING) { //x/yLoc

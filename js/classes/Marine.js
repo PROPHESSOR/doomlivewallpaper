@@ -34,7 +34,31 @@ class Marine extends Actor{
 				'playd1',
 				6
 			],
-			'loop'
+			'loop',
+
+			'attack:',
+			[
+				'playe1',
+				6,
+				[[() => new Projectile([this.x, this.y], this.currentHate)]]
+			],
+			'stop',
+
+			'death:',
+			[
+				'playf1',
+				6,
+				[[this.sound, 'DSPLDETH']]
+			],
+			[
+				'tnta0',
+				6,
+				[
+					[() => $(this.element).remove()]
+					//TODO: Remove object
+				]
+			],
+			'stop'
 		];
 
 		this.offsets = {
@@ -44,6 +68,13 @@ class Marine extends Actor{
 			'playd1': [0,0]
 		};
 
+		this.currentHate = null;
+
 		this.initStates();
+	}
+
+	attack(target){
+		this.currentHate = target;
+		this.gotoState('attack');
 	}
 }

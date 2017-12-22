@@ -22,7 +22,14 @@ class Projectile extends Actor{
 			[
 				'bal7a1a5',
 				4,
-				[[this.move, Actor.calculateDirection(this, target).angle, 45]]
+				[
+					[this.move, Actor.calculateDirection(this, target).angle, 45],
+					[
+						() => {
+							// target.kill(); //FIXME: Это не так должно работать
+						}
+					]
+				]
 			],
 			'loop'
 		];

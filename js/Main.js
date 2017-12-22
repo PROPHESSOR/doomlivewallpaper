@@ -42,6 +42,12 @@ DLW.Wave = {
 	}
 };
 
+DLW.spam = function(){
+	new Sergeant(Utils.random(1, innerWidth), Utils.random(1, innerHeight));
+};
+
+const interval = setInterval(DLW.spam, 10000);
+
 const Main = DLW;
 
 // DLW.Engine = new class DLWEngine {

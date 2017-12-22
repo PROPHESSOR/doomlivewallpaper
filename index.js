@@ -20,5 +20,5 @@ document.addEventListener('click', function(e){
 
 document.addEventListener('contextmenu', function(e){
 	e.preventDefault();
-	new Sergeant([innerWidth/4,innerHeight/4]);
+	// new Sergeant([innerWidth/4,innerHeight/4]);
 }, false);
