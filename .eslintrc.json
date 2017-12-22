@@ -260,7 +260,9 @@
             "error",
             "never"
         ],
-        "valid-jsdoc": "error",
+        "valid-jsdoc": ["error", {
+            "requireReturn": false
+        }],
         "vars-on-top": "error",
         "wrap-iife": [2, "inside"],
         "wrap-regex": "error",
