@@ -42,6 +42,8 @@ DLW.Wave = {
 	}
 };
 
+const Main = DLW;
+
 // DLW.Engine = new class DLWEngine {
 // 	constructor() {}
 
