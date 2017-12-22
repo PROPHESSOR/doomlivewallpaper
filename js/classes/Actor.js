@@ -125,17 +125,13 @@ class Actor {
 		if (!sound) {
 			return console.warn('Нет звука для воспроизвидения!');
 		}
-		if (!channel){
-			channel = this._soundChannel;
-			this._soundChannel++;
-			if (this._soundChannel > 5) this._soundChannel = 1;
+		if (sound instanceof Array){
+			sound = sound[Utils.random(0, sound.length - 1)];
 		}
-		const name = this.sounds[sound] || sound;
-		const [player] = $(`#player${channel}`);
 
-		player.src = `res/sounds/${name}.ogg`;
-		player.loop = loop;
-		player.play();
+		const name = this.sounds[sound] || sound;
+
+		Sound.play(`res/sounds/${name}.ogg`, loop, channel);
 	}
 
 	/** Искать состояние

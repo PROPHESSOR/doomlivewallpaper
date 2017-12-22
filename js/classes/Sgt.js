@@ -7,11 +7,11 @@ class Sergeant extends Actor {
 		const spriteFolder = 'sgt';
 		const params = {
 			'sounds': {
-				'fire': 'DSFIRSHT',
-				'punch': 'DSCLAW',
-				'alert': 'DSBRSSIT',
-				'death': 'DSBRSDTH',
-				'idle': 'DSDMACT'
+				'fire': 'DSDSHTGN',
+				'punch': '',
+				'alert': ['DSPOSIT1', 'DSPOSIT2', 'DSPOSIT3'],
+				'death': ['DSPODTH1', 'DSPODTH2', 'DSPODTH3'],
+				'idle': ''
 			}
 		};
 		const spawn = spawnxy || [0, 0];
@@ -24,7 +24,7 @@ class Sergeant extends Actor {
 				[
 					() => Actor.getSpriteName('spos',1,1),
 					6,
-					[[this.sound, 'DSPOSIT1']]
+					[[this.sound, this.sounds.alert]]
 				],
 				[
 					() => Actor.getSpriteName('spos',1,this.direction),
@@ -72,7 +72,7 @@ class Sergeant extends Actor {
 						// [this.move, Actor.calculateDirection(this, DoomGuy).angle, 30],
 						//[this.sound, 'idle']
 						// [() => new Projectile([this.x, this.y], DoomGuy)],
-						[this.sound, 'DSDSHTGN', false]
+						[this.sound, this.sounds.fire]
 					]
 				],
 			'stop'

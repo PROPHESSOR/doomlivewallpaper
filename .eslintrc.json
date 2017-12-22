@@ -17,7 +17,8 @@
         "$": false,
         "jQuery": false,
         "Utils": false,
-        "DoomGuy": false
+        "DoomGuy": false,
+        "Sound": false
     },
     "extends": "eslint:recommended",
     "rules": {
