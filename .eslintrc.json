@@ -16,7 +16,8 @@
         "AI": false,
         "$": false,
         "jQuery": false,
-        "Utils": false
+        "Utils": false,
+        "DoomGuy": false
     },
     "extends": "eslint:recommended",
     "rules": {
@@ -48,7 +49,7 @@
         "computed-property-spacing": "error",
         "consistent-return": "off",
         "consistent-this": "error",
-        "curly": "error",
+        "curly": "off",
         "default-case": "error",
         "dot-location": "error",
         "dot-notation": "error",
