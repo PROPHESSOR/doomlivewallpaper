@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const Actor = require('./Actor');
+const Actor = require("./Actor");
 
-class Zombie extends Actor{
-	constructor(){
-		super();
-	}
+class Zombie extends Actor {
+  constructor() {
+    super();
+  }
 }
 
 module.exports = Zombie;

@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const Actor = require('./Actor');
+const Actor = require("./Actor");
 
-class Cacodemon extends Actor{
-	constructor(){
-		super();
-	}
+class Cacodemon extends Actor {
+  constructor() {
+    super();
+  }
 }
 
 module.exports = Cacodemon;

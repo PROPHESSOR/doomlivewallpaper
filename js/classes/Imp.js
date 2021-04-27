@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const Actor = require('./Actor');
+const Actor = require("./Actor");
 
-class Imp extends Actor{
-	constructor(){
-		super();
-	}
+class Imp extends Actor {
+  constructor() {
+    super();
+  }
 }
 
 module.exports = Imp;
