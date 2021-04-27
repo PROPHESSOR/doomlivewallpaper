@@ -1,15 +1,48 @@
 /*
- * Copyright (c) 2017 PROPHESSOR
+ * Copyright (c) 2017-2021 PROPHESSOR
  */
 
 "use strict";
+
+import { Rect, Vec2, random } from "../Utils";
+
+export interface iActorSpriteName {
+  [0]: string; // Sprite name
+  [1]: number; // Animation number
+  [2]: number; // Direction number
+}
+
+export interface iActorState {
+  [0]: string | (() => string) | iActorSpriteName | null; // Sprite name
+  [1]: number; // ticks | -1
+  [2]: [function: ((...args: any[]) => void), ...args: any] | [];
+}
+
+export interface iActorBaseParams {
+  direction?: number;
+}
 
 /**
  * @namespace Actor
  * @class
  */
 
-class Actor {
+export class Actor extends Rect {
+  spriteFolder: string;
+  private params: {};
+  protected element: HTMLImageElement;
+  direction: number;
+  angle: number;
+  private soundChannel: number;
+  offsets: { [key: string]: Vec2 };
+  
+  protected states: (string | iActorState)[];
+
+  private isGoto: boolean;
+  private statePtr: number;
+  private stateName: string;
+  private prevStateName: string;
+
   /**
    * @constructor
    * @memberof Actor
@@ -19,27 +52,19 @@ class Actor {
    * @param {number} spawn.0 - X-координата
    * @param {number} spawn.1 - Y-координата
    */
-  constructor(spriteFolder = "", params = {}, spawn = []) {
+  constructor(spriteFolder = "", params: iActorBaseParams = {}, spawn: number[] = []) {
+    const element = Actor.createActorElement();
+    
+    super(spawn[0], spawn[1], element.width, element.height);
+    
+    this.element = element;
     this.spriteFolder = spriteFolder;
-    this._params = params;
-    this._spawn = spawn;
-    this.element = Actor.createActorElement();
+    this.params = params;
     [this.x, this.y] = spawn;
     [this.width, this.height] = [this.element.width, this.element.height];
     this.direction = params.direction || 1;
-    this._soundChannel = 1;
+    this.soundChannel = 1;
 
-    this.sounds = params.sounds || {
-      alert: null,
-      death: null,
-      fire: null,
-      punch: null,
-      idle: null,
-    };
-
-    this.sprites = params.sprite || {};
-
-    this.timer = null;
     this.states = [
       "spawn:", // State label
       [
@@ -93,6 +118,8 @@ class Actor {
   turnTo(target) {
     const data = Actor.calculateDirection(this, target);
 
+    if (!data) return;
+
     this.direction = data.direction;
     this.angle = data.angle;
   }
@@ -101,10 +128,10 @@ class Actor {
    */
   spawn() {
     this.element.style.position = "absolute";
-    $("#main").append(this.element);
-    $(this.element).on("contextmenu", () => {
-      DoomGuy.attack(this);
-    });
+    document.querySelector("#main").append(this.element);
+    // $(this.element).on("contextmenu", () => {
+    //   DoomGuy.attack(this);
+    // });
   }
 
   /** Убить актора
@@ -138,12 +165,10 @@ class Actor {
       return console.warn("Нет звука для воспроизвидения!");
     }
     if (sound instanceof Array) {
-      sound = sound[Utils.random(0, sound.length - 1)];
+      sound = sound[random(0, sound.length - 1)];
     }
 
-    const name = this.sounds[sound] || sound;
-
-    Sound.play(`res/sounds/${name}.ogg`, loop, channel);
+    console.info(`res/sounds/${sound}.ogg`, loop, channel); // TODO: Sound.play
   }
 
   /** Искать состояние
@@ -154,7 +179,7 @@ class Actor {
     name += ":"; //eslint-disable-line
     for (const i in this.states) {
       if (this.states[i] === name) {
-        return i;
+        return Number(i);
       }
     }
 
@@ -192,18 +217,20 @@ class Actor {
    * @param  {number} time - Длительность состаяния
    */
   updateState(time) {
-    if (this.timer) {
-      try {
-        clearTimeout(this.timer);
-      } catch (e) {
-        // ignore
-      }
-    }
-    if (!time || time < 0) {
-      this.tick();
-    } else {
-      this.timer = setTimeout(this.tick, time);
-    }
+    this.tick();
+    // FIXME:
+    // if (this.timer) {
+    //   try {
+    //     clearTimeout(this.timer);
+    //   } catch (e) {
+    //     // ignore
+    //   }
+    // }
+    // if (!time || time < 0) {
+    //   this.tick();
+    // } else {
+    //   this.timer = setTimeout(this.tick, time);
+    // }
   }
 
   /** Тик
@@ -240,9 +267,8 @@ class Actor {
         );
       }
       if (state[2]) {
-        for (let i = 0; i < state[2].length; i++) {
-          /*()=>*/
-          state[2][i][0](...state[2][i].slice(1));
+        for (const statement of state[2]) {
+          statement[0](...statement.slice(1));
         }
       }
     }
@@ -425,9 +451,9 @@ class Actor {
   //endregion static
 }
 
-Actor.IDLE = "IDLE"; //TODO: Сделать объекты с разными свойствами
-Actor.SHOOTING = "SHOOTING";
-Actor.WALKING = "WALKING";
-Actor.DIED = "DIED";
+// Actor.IDLE = "IDLE"; //TODO: Сделать объекты с разными свойствами
+// Actor.SHOOTING = "SHOOTING";
+// Actor.WALKING = "WALKING";
+// Actor.DIED = "DIED";
 
 // module.exports = Actor;

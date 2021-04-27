@@ -21,8 +21,11 @@
     "url": "https://github.com/PROPHESSOR/doomlivewallpaper/issues"
   },
   "homepage": "https://github.com/PROPHESSOR/doomlivewallpaper#readme",
-  "window":{
-    "width":640,
-    "height":480
+  "window": {
+    "width": 640,
+    "height": 480
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
   }
 }
