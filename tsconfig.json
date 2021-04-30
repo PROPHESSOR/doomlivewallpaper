@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "ES6",
+    "lib": ["ES6", "DOM"]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

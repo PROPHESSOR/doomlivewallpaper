@@ -228,7 +228,7 @@ export default abstract class Actor extends Rect {
     return this;
   }
 
-  private tick() {
+  tick() {
     if (this.delayTimer) return this.delayTimer--;
 
     const state = this.states[this.statePtr];

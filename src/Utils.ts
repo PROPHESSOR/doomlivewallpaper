@@ -7,7 +7,7 @@ export class Vec2 {
     this.y = y;
   }
 
-  [Symbol.iterator] = function* () {
+  *[Symbol.iterator]() {
     yield this.x;
     yield this.y;
   } 
