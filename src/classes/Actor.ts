@@ -14,11 +14,13 @@ export interface iActorSpriteName {
 
 export type tSpriteName = string | (() => string) | iActorSpriteName;
 
-export interface iActorState {
-  [0]: tSpriteName | null; // Sprite name
-  [1]: number; // ticks | -1
-  [2]: [function: ((...args: any[]) => void), ...args: any][] | [];
-}
+// export interface iActorState {
+//   [0]: tSpriteName | null; // Sprite name
+//   [1]: number; // ticks | -1
+//   [2]: [function: ((...args: any[]) => void), ...args: any][] | ((...args: any[]) => void)[] | [];
+// }
+
+export type iActorState = (actor: any) => any;
 
 export interface iActorBaseParams {
   direction?: number;
@@ -29,7 +31,7 @@ export interface iActorBaseParams {
  * @class
  */
 
-export default class Actor extends Rect {
+export default abstract class Actor extends Rect {
   spriteFolder: string;
   private params: {};
   protected element: HTMLImageElement;
@@ -38,12 +40,13 @@ export default class Actor extends Rect {
   private soundChannel: number;
   offsets: { [key: string]: Vec2 };
   
-  protected states: (string | iActorState)[];
+  protected states: ('loop' | 'stop' | string | iActorState)[];
 
   private isGoto: boolean;
   private statePtr: number;
   private stateName: string;
   private prevStateName: string;
+  private delayTimer: number;
 
   /**
    * @constructor
@@ -64,14 +67,10 @@ export default class Actor extends Rect {
     this.soundChannel = 1;
 
     this.states = [
-      "spawn:", // State label
-      [
-        null, // Sprite name (null = no sprite)
-        -1, // animation length (-1 = infinite)
-        [], // code pointers
-      ],
-      "loop",
-    ];
+      'spawn:',
+      (self: Actor) => self.duration(-1),
+      'loop'
+    ]
 
     this.offsets = {};
 
@@ -84,7 +83,7 @@ export default class Actor extends Rect {
       this.turnTo = this.turnTo.bind(this);
       this.findState = this.findState.bind(this);
       this.gotoState = this.gotoState.bind(this);
-      this.updateState = this.updateState.bind(this);
+      this.duration = this.duration.bind(this);
       this.setSprite = this.setSprite.bind(this);
     }
 
@@ -95,36 +94,38 @@ export default class Actor extends Rect {
 
   /** Инициализировать состояния и запустить цикл (spawn)
    */
-  initStates() {
+  protected initStates() {
     this.gotoState("spawn");
     this.isGoto = false;
-    this.updateState(0);
+    this.duration(0);
   }
 
   /** Развернуть на 180°
    * @returns {number} Id направления
    */
-  reverseDirection() {
+  public reverseDirection() {
     this.direction = Actor.reverseDirection(this.angle);
 
-    return this.direction;
+    return this;
   }
 
   /** Повернуться к
    * @param  {Actor} target - Цель
    */
-  turnTo(target) {
+  public turnTo(target) {
     const data = Actor.calculateDirection(this, target);
 
-    if (!data) return;
+    if (!data) return this;
 
     this.direction = data.direction;
     this.angle = data.angle;
+
+    return this;
   }
 
   /** Отобразить элемент на экране (append)
    */
-  spawn() {
+  private spawn() {
     this.element.style.position = "absolute";
     document.querySelector("#main").append(this.element);
     // $(this.element).on("contextmenu", () => {
@@ -134,8 +135,10 @@ export default class Actor extends Rect {
 
   /** Убить актора
    */
-  kill() {
+  public kill() {
     this.gotoState("death");
+
+    return null;
     // setTimeout(() => {
     // 	console.log('remmove elllement');
     // 	$(this.element).remove();
@@ -146,7 +149,7 @@ export default class Actor extends Rect {
    * @param  {number} x=this.x - X-координата
    * @param  {number} y=this.y - Y-координата
    */
-  render(x = this.x, y = this.y) {
+  private render(x = this.x, y = this.y) {
     this.element.style.left = `${x}px`;
     this.element.style.top = `${y}px`;
   }
@@ -157,23 +160,25 @@ export default class Actor extends Rect {
    * @param {number} channel=0 - Канал звука (1-5);
    * @returns {undefined} ...
    */
-  sound(sound, loop = false, channel = 0) {
+  public sound(sound: string, loop = false, channel = 0) {
     //TODO: Проверка на наличие кодека
     if (!sound) {
       return console.warn("Нет звука для воспроизвидения!");
     }
-    if (sound instanceof Array) {
-      sound = sound[random(0, sound.length - 1)];
-    }
+    // if (sound instanceof Array) { // TODO: SNDINFO alternative
+    //   sound = sound[random(0, sound.length - 1)];
+    // }
 
     console.info(`res/sounds/${sound}.ogg`, loop, channel); // TODO: Sound.play
+
+    return this;
   }
 
   /** Искать состояние
    * @param  {string} name - Состояние
    * @returns {number} ID состояния в массиве
    */
-  findState(name) {
+  private findState(name) {
     name += ":"; //eslint-disable-line
     for (const i in this.states) {
       if (this.states[i] === name) {
@@ -188,17 +193,20 @@ export default class Actor extends Rect {
    * @param  {string} name - Состояние
    * @returns {undefined} ...
    */
-  gotoState(name) {
+  public gotoState(name) {
     this.statePtr = this.findState(name);
     if (!this.statePtr) {
-      return console.warn(`Unknown state ${name}`);
+      console.warn(`Unknown state ${name}`);
+      return this;
     }
     this.prevStateName = this.stateName;
     this.stateName = name;
     this.isGoto = true;
+
+    return this;
   }
 
-  /** Получить длительность состояния
+  /** Получить длительность состояния (???)
    * @returns {number} Длительность
    */
   getStateTime() {
@@ -211,46 +219,33 @@ export default class Actor extends Rect {
     return 0;
   }
 
-  /** Обновить состояние актора
-   * @param  {number} time - Длительность состаяния
+  /** Задержать актора в текущем состоянии
+   * @param  time - Длительность состояния в тиках
    */
-  updateState(time) {
-    this.tick();
-    // FIXME:
-    // if (this.timer) {
-    //   try {
-    //     clearTimeout(this.timer);
-    //   } catch (e) {
-    //     // ignore
-    //   }
-    // }
-    // if (!time || time < 0) {
-    //   this.tick();
-    // } else {
-    //   this.timer = setTimeout(this.tick, time);
-    // }
+  public duration(time = 0) {
+    this.delayTimer = time;
+
+    return this;
   }
 
-  /** Тик
-   * @private
-   * @returns {undefined} ...
-   */
-  tick() {
+  private tick() {
+    if (this.delayTimer) return this.delayTimer--;
+
     const state = this.states[this.statePtr];
 
     if (typeof state === "string") {
       if (state === "loop") {
         this.gotoState(this.stateName);
-        this.updateState(0);
+        this.duration(0);
       } else if (state === "stop") {
         this.gotoState(this.prevStateName);
-        this.updateState(0);
+        this.duration(0);
       } else if (state[0] === ":") {
         this.gotoState(state.slice(1));
-        this.updateState(0);
+        this.duration(0);
       } else if (state.slice(-1) === ":") {
         this.statePtr++;
-        this.updateState(0);
+        this.duration(0);
 
         return;
       }
@@ -264,9 +259,15 @@ export default class Actor extends Rect {
           Actor.getSpriteName(state[0][0], state[0][1], state[0][2])
         );
       }
+
       if (state[2]) {
         for (const statement of state[2]) {
-          statement[0](...statement.slice(1));
+          if (typeof statement === 'function') {
+            statement(this);
+          } else {
+            console.warn('Deprecated state call!', state, this);
+            statement[0](...statement.slice(1));
+          }
         }
       }
     }
@@ -276,14 +277,20 @@ export default class Actor extends Rect {
     if (time < 0) {
       return;
     }
-    this.updateState(time);
+    this.duration(time);
+  }
+
+  public sprite(base: string, frame: number, direction: number) {
+    this.setSprite(Actor.getSpriteName(base, frame, direction));
+
+    return this;
   }
 
   /** Задать спрайт
    * @param  {sting} name - Имя спрайта без расширения (.png)
    * @returns {undefined} ...
    */
-  setSprite(name) {
+  public setSprite(name) {
     let el = this.element;
 
     if (!name) {
@@ -308,7 +315,9 @@ export default class Actor extends Rect {
    */
   detectCollision(/* object */) {
     //Actor.calculateDistance();
-    return this;
+    console.warn('detectCollision: Not implemented yet');
+
+    return false;
   }
 
   /** Передвигает актора в направлении direction со скоростью speed
@@ -316,11 +325,15 @@ export default class Actor extends Rect {
    * @param  {number} speed - Спид
    */
   move(direction, speed) {
-    let xofs = speed * Math.sin((direction * Math.PI) / 180);
-    let yofs = -(speed * Math.cos((direction * Math.PI) / 180));
+    const xofs = speed * Math.sin((direction * Math.PI) / 180);
+    const yofs = -(speed * Math.cos((direction * Math.PI) / 180));
 
     this.x += xofs;
     this.y += yofs;
+
+    // FIXME: render?
+
+    return this;
   }
 
   //region static
@@ -442,16 +455,20 @@ export default class Actor extends Rect {
       "m",
       "n",
       "o",
+      "p",
+      "q",
+      "r",
+      "s",
+      "t",
+      "u",
+      "v",
+      "w",
+      "x",
+      "y",
+      "z"
     ];
 
     return name + letters[animation] + direction;
   }
   //endregion static
 }
-
-// Actor.IDLE = "IDLE"; //TODO: Сделать объекты с разными свойствами
-// Actor.SHOOTING = "SHOOTING";
-// Actor.WALKING = "WALKING";
-// Actor.DIED = "DIED";
-
-// module.exports = Actor;

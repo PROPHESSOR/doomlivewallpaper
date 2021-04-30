@@ -4,21 +4,6 @@
         "es6": true
     },
     "globals": {
-        "Actor": false,
-        "Projectile": false,
-        "Baron": false,
-        "Imp": false,
-        "Cacodemon": false,
-        "Marine": false,
-        "Sergeant": false,
-        "Zombie": false,
-        "Demon": true,
-        "AI": false,
-        "$": false,
-        "jQuery": false,
-        "Utils": false,
-        "DoomGuy": false,
-        "Sound": false
     },
     "extends": "eslint:recommended",
     "rules": {

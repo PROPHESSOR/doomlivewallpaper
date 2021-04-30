@@ -30,14 +30,14 @@ export class Game {
   run() {
     this.background.render();
     console.log('run()');
-    this.actors.add(new Baron(new Vec2(256, 256)));
-    this.timer = setInterval(() => this.loop(), this.FPS / 1000);
+    // this.actors.add(new Baron(new Vec2(256, 256)));
+    this.timer = setInterval(() => this.loop(), 1000); //this.FPS / 1000);
   }
 
   private loop() {
     this.tickno++;
     console.log('tick', this.tickno);
-    this.actors.tick();
+    // this.actors.tick();
   }
 }
 

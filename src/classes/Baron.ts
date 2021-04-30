@@ -4,63 +4,30 @@ import { Vec2 } from '../Utils';
 import Actor from './Actor';
 
 export default class Baron extends Actor {
-  protected states = [
-    "spawn:",
-    [() => Actor.getSpriteName("boss", 1, 1), 6, [[this.sound, "DSBRSSIT"]]],
-    [
-      () => Actor.getSpriteName("boss", 1, this.direction),
-      6,
-      [[this.gotoState, "walk"]],
-    ],
-    "stop",
-
-    "walk:",
-    [
-      () => Actor.getSpriteName("boss", 1, this.direction),
-      6,
-      [/* [this.turnTo, DoomGuy] */],
-    ],
-    [() => Actor.getSpriteName("boss", 2, this.direction), 6, []],
-    [
-      () => Actor.getSpriteName("boss", 3, this.direction),
-      6,
-      [[() => this.move(this.angle, 30)]],
-    ],
-    [
-      () => Actor.getSpriteName("boss", 3, this.direction),
-      12,
-      [[this.gotoState, "fire"]],
-    ],
-    "loop",
-
-    "fire:",
-    [
-      () => Actor.getSpriteName("boss", 5, this.direction), // 'bosse1',
-      6,
-      [],
-    ],
-    [
-      () => Actor.getSpriteName("boss", 6, this.direction), // 'bossf1',
-      6,
-      [],
-    ],
-    [
-      () => Actor.getSpriteName("boss", 7, this.direction), // 'bossg1',
-      6,
-      [
-        // [this.move, Actor.calculateDirection(this, DoomGuy).angle, 30],
-        //[this.sound, 'idle']
-        // [() => new Projectile([this.x, this.y], DoomGuy)],
-        [this.sound, "DSFIRSHT", false],
-      ],
-    ],
-    "stop",
-  ];
-
   constructor(spawn = new Vec2(0, 0)) {
     const spriteFolder = "baron";
 
     super(spriteFolder, {}, spawn);
+
+    this.states = [
+      'spawn:',
+      (self: Baron) => self.sprite('boss', 1, 1).duration(6).sound('DSBRSSIT'),
+      (self: Baron) => self.sprite('boss', 1, self.direction).duration(6).gotoState('walk'),
+      'stop',
+  
+      'walk:',
+      (self: Baron) => self.sprite('boss', 1, self.direction).duration(6), // TODO: Turn to target
+      (self: Baron) => self.sprite('boss', 2, self.direction).duration(6),
+      (self: Baron) => self.sprite('boss', 3, self.direction).duration(6).move(self.angle, 30),
+      (self: Baron) => self.sprite('boss', 3, self.direction).duration(6).gotoState('fire'),
+      'loop',
+      
+      'fire:',
+      (self: Baron) => self.sprite('boss', 5, self.direction).duration(6),
+      (self: Baron) => self.sprite('boss', 6, self.direction).duration(6),
+      (self: Baron) => self.sprite('boss', 7, self.direction).duration(6).sound('DSFIRSHT'), // TODO: Projectile
+      'stop',
+    ];
 
     /*this.offsets = {
 			'bossa1': [-19, -69],
