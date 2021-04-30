@@ -9,7 +9,6 @@ class Background {
   render(bg = 'bg1') {
     const el: HTMLElement = document.querySelector('#main');
 
-    el.style.backgroundSize = 'cover';
     el.style.backgroundImage = `url(res/bg/${bg}.jpg)`;
   }
 
