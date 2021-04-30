@@ -1,4 +1,6 @@
-import Main from './src/Main';
+import Game from './src/Main';
+
+Game.run();
 
 // const Main = require('./js/Main');
 // global.$ = $;

@@ -1,3 +1,6 @@
+import Baron from "./classes/Baron";
+import { Vec2 } from "./Utils";
+
 class Background {
   private bg = '';
 
@@ -13,14 +16,24 @@ class Background {
 }
 
 export class Game {
+  public background: Background;
+
+  constructor() {
+    this.background = new Background();
+  }
+
   run() {
+    this.background.render();
     console.log('run()');
+    window['baron'] = new Baron(new Vec2(256, 256));
   }
 
   private loop() {
     // TODO:
   }
 }
+
+export default new Game();
 
 // DLW.Wave = {
 //   currentWave: 0,
