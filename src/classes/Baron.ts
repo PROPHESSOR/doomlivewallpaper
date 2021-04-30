@@ -19,7 +19,7 @@ export default class Baron extends Actor {
       (self: Baron) => self.sprite('boss', 1, self.direction).duration(6), // TODO: Turn to target
       (self: Baron) => self.sprite('boss', 2, self.direction).duration(6),
       (self: Baron) => self.sprite('boss', 3, self.direction).duration(6).move(self.angle, 30),
-      (self: Baron) => self.sprite('boss', 3, self.direction).duration(6).gotoState('fire'),
+      (self: Baron) => self.sprite('boss', 4, self.direction).duration(6).gotoState('fire'),
       'loop',
       
       'fire:',

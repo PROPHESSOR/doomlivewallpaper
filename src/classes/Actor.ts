@@ -190,7 +190,6 @@ export default abstract class Actor extends Rect {
    * @returns {undefined} ...
    */
   public gotoState(name: string) {
-    console.log('gotoState', name, this.stateName, this.prevStateName, this.statePtr);
     const offset = this.findState(name);
     if (offset === null) {
       console.warn(`Unknown state ${name}`);
@@ -234,16 +233,12 @@ export default abstract class Actor extends Rect {
     if (typeof state === "string") {
       if (state === "loop") {
         this.gotoState(this.stateName);
-        this.duration(0);
       } else if (state === "stop") {
         this.gotoState(this.prevStateName);
-        this.duration(0);
       } else if (state[0] === ":") {
         this.gotoState(state.slice(1));
-        this.duration(0);
       } else if (state.slice(-1) === ":") {
         this.statePtr++;
-        this.duration(0);
 
         return;
       }
@@ -253,13 +248,7 @@ export default abstract class Actor extends Rect {
       throw new Error('Unexpected state token');
     }
 
-    const time = this.getStateTime();
-
     !this.isGoto ? this.statePtr++ : (this.isGoto = false); // eslint-disable-line
-    if (time < 0) {
-      return;
-    }
-    this.duration(time);
   }
 
   public sprite(base: string, frame: number, direction: number) {

@@ -23,7 +23,7 @@ export class Game {
   private timer: number;
   private tickno: number = 0;
 
-  constructor({ FPS=30 } = {}) {
+  constructor({ FPS=35 } = {}) {
     this.FPS = FPS;
   }
 
@@ -31,7 +31,7 @@ export class Game {
     this.background.render();
     console.log('run()');
     this.actors.add(new Baron(new Vec2(256, 256)));
-    this.timer = setInterval(() => this.loop(), 1000); //this.FPS / 1000);
+    this.timer = setInterval(() => this.loop(), 1000 / this.FPS);
   }
 
   private loop() {
