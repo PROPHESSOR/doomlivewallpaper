@@ -65,6 +65,7 @@ export default abstract class Actor extends Rect {
     this.params = params;
     this.direction = params.direction || 1;
     this.soundChannel = 1;
+    this.isGoto = false;
 
     this.states = [
       'spawn:',
@@ -88,16 +89,12 @@ export default abstract class Actor extends Rect {
     }
 
     this.spawn();
-
-    // this.setSprite('bossa1');
   }
 
   /** Инициализировать состояния и запустить цикл (spawn)
    */
   protected initStates() {
     this.gotoState("spawn");
-    this.isGoto = false;
-    this.duration(0);
   }
 
   /** Развернуть на 180°
@@ -179,10 +176,9 @@ export default abstract class Actor extends Rect {
    * @returns {number} ID состояния в массиве
    */
   private findState(name) {
-    name += ":"; //eslint-disable-line
-    for (const i in this.states) {
-      if (this.states[i] === name) {
-        return Number(i);
+    for (let i = 0; i < this.states.length; i++) {
+      if (this.states[i] === name + ':') {
+        return i;
       }
     }
 
@@ -193,12 +189,14 @@ export default abstract class Actor extends Rect {
    * @param  {string} name - Состояние
    * @returns {undefined} ...
    */
-  public gotoState(name) {
-    this.statePtr = this.findState(name);
-    if (!this.statePtr) {
+  public gotoState(name: string) {
+    console.log('gotoState', name, this.stateName, this.prevStateName, this.statePtr);
+    const offset = this.findState(name);
+    if (offset === null) {
       console.warn(`Unknown state ${name}`);
       return this;
     }
+    this.statePtr = offset;
     this.prevStateName = this.stateName;
     this.stateName = name;
     this.isGoto = true;
@@ -249,28 +247,12 @@ export default abstract class Actor extends Rect {
 
         return;
       }
+    } else if (typeof state === 'function') {
+      state(this);
     } else {
-      if (typeof state[0] === "string") {
-        this.setSprite(state[0]);
-      } else if (typeof state[0] === "function") {
-        this.setSprite(state[0]());
-      } else if (state[0] instanceof Array) {
-        this.setSprite(
-          Actor.getSpriteName(state[0][0], state[0][1], state[0][2])
-        );
-      }
-
-      if (state[2]) {
-        for (const statement of state[2]) {
-          if (typeof statement === 'function') {
-            statement(this);
-          } else {
-            console.warn('Deprecated state call!', state, this);
-            statement[0](...statement.slice(1));
-          }
-        }
-      }
+      throw new Error('Unexpected state token');
     }
+
     const time = this.getStateTime();
 
     !this.isGoto ? this.statePtr++ : (this.isGoto = false); // eslint-disable-line
