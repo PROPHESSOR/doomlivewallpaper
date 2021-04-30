@@ -12,10 +12,12 @@ export interface iActorSpriteName {
   [2]: number; // Direction number
 }
 
+export type tSpriteName = string | (() => string) | iActorSpriteName;
+
 export interface iActorState {
-  [0]: string | (() => string) | iActorSpriteName | null; // Sprite name
+  [0]: tSpriteName | null; // Sprite name
   [1]: number; // ticks | -1
-  [2]: [function: ((...args: any[]) => void), ...args: any] | [];
+  [2]: [function: ((...args: any[]) => void), ...args: any][] | [];
 }
 
 export interface iActorBaseParams {
@@ -27,7 +29,7 @@ export interface iActorBaseParams {
  * @class
  */
 
-export class Actor extends Rect {
+export default class Actor extends Rect {
   spriteFolder: string;
   private params: {};
   protected element: HTMLImageElement;
@@ -46,22 +48,18 @@ export class Actor extends Rect {
   /**
    * @constructor
    * @memberof Actor
-   * @param  {string} spriteFolder='' - Название папки со спрайтами актора
-   * @param  {object} params={} - Параметры актора
-   * @param  {array} spawn=[] - Координаты спавна
-   * @param {number} spawn.0 - X-координата
-   * @param {number} spawn.1 - Y-координата
+   * @param spriteFolder='' - Название папки со спрайтами актора
+   * @param params={} - Параметры актора
+   * @param spawn - Координаты спавна
    */
-  constructor(spriteFolder = "", params: iActorBaseParams = {}, spawn: number[] = []) {
+  constructor(spriteFolder = "", params: iActorBaseParams = {}, spawn: Vec2 = new Vec2(0, 0)) {
     const element = Actor.createActorElement();
     
-    super(spawn[0], spawn[1], element.width, element.height);
+    super(spawn.x, spawn.y, element.width, element.height);
     
     this.element = element;
     this.spriteFolder = spriteFolder;
     this.params = params;
-    [this.x, this.y] = spawn;
-    [this.width, this.height] = [this.element.width, this.element.height];
     this.direction = params.direction || 1;
     this.soundChannel = 1;
 

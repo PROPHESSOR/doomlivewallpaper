@@ -1,22 +1,13 @@
 "use strict";
 
-// const Actor = require('./Actor');
+import { Vec2 } from '../Utils';
+import Actor from './Actor';
 
-class Baron extends Actor {
-  constructor(spawnxy) {
+export default class Baron extends Actor {
+  constructor(spawn = new Vec2(0, 0)) {
     const spriteFolder = "baron";
-    const params = {
-      sounds: {
-        fire: "DSFIRSHT",
-        punch: "DSCLAW",
-        alert: "DSBRSSIT",
-        death: "DSBRSDTH",
-        idle: "DSDMACT",
-      },
-    };
-    const spawn = spawnxy || [0, 0];
 
-    super(spriteFolder, params, spawn);
+    super(spriteFolder, {}, spawn);
 
     /* eslint-disable indent */
     this.states = [
@@ -33,7 +24,7 @@ class Baron extends Actor {
       [
         () => Actor.getSpriteName("boss", 1, this.direction),
         6,
-        [[this.turnTo, DoomGuy]],
+        [/* [this.turnTo, DoomGuy] */],
       ],
       [() => Actor.getSpriteName("boss", 2, this.direction), 6, []],
       [
@@ -50,20 +41,22 @@ class Baron extends Actor {
 
       "fire:",
       [
-        () => Actor.getSpriteName("boss", 5, this.direction), //'bosse1',
+        () => Actor.getSpriteName("boss", 5, this.direction), // 'bosse1',
         6,
+        [],
       ],
       [
-        () => Actor.getSpriteName("boss", 6, this.direction), //'bossf1',
+        () => Actor.getSpriteName("boss", 6, this.direction), // 'bossf1',
         6,
+        [],
       ],
       [
-        () => Actor.getSpriteName("boss", 7, this.direction), //'bossg1',
+        () => Actor.getSpriteName("boss", 7, this.direction), // 'bossg1',
         6,
         [
           // [this.move, Actor.calculateDirection(this, DoomGuy).angle, 30],
           //[this.sound, 'idle']
-          [() => new Projectile([this.x, this.y], DoomGuy)],
+          // [() => new Projectile([this.x, this.y], DoomGuy)],
           [this.sound, "DSFIRSHT", false],
         ],
       ],
