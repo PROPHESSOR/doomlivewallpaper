@@ -4,6 +4,7 @@
 
 "use strict";
 
+import Sound from "../Sound";
 import { Rect, Vec2, random } from "../Utils";
 
 export interface iActorSpriteName {
@@ -37,9 +38,10 @@ export default abstract class Actor extends Rect {
   protected element: HTMLImageElement;
   direction: number;
   angle: number;
-  private soundChannel: number;
   offsets: { [key: string]: Vec2 };
-  
+
+  protected soundChannels: Sound;
+
   protected states: ('loop' | 'stop' | string | iActorState)[];
 
   private isGoto: boolean;
@@ -64,7 +66,6 @@ export default abstract class Actor extends Rect {
     this.spriteFolder = spriteFolder;
     this.params = params;
     this.direction = params.direction || 1;
-    this.soundChannel = 1;
     this.isGoto = false;
 
     this.states = [
@@ -74,6 +75,8 @@ export default abstract class Actor extends Rect {
     ]
 
     this.offsets = {};
+
+    this.soundChannels = new Sound(8);
 
     //This binders
     // Binder.bindAll(this);
@@ -157,8 +160,7 @@ export default abstract class Actor extends Rect {
    * @param {number} channel=0 - Канал звука (1-5);
    * @returns {undefined} ...
    */
-  public sound(sound: string, loop = false, channel = 0) {
-    //TODO: Проверка на наличие кодека
+  public sound(sound: string, channel = 0, loop = false) {
     if (!sound) {
       return console.warn("Нет звука для воспроизвидения!");
     }
@@ -166,7 +168,7 @@ export default abstract class Actor extends Rect {
     //   sound = sound[random(0, sound.length - 1)];
     // }
 
-    console.info(`res/sounds/${sound}.ogg`, loop, channel); // TODO: Sound.play
+    this.soundChannels.play(`res/sounds/${sound}.ogg`, channel, loop);
 
     return this;
   }
