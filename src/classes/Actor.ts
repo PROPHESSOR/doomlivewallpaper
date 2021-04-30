@@ -138,11 +138,16 @@ export default abstract class Actor extends Rect {
   public kill() {
     this.gotoState("death");
 
-    return null;
+    return this;
     // setTimeout(() => {
     // 	console.log('remmove elllement');
     // 	$(this.element).remove();
     // }, 1000);
+  }
+
+  public remove() {
+    // TODO:
+    return null;
   }
 
   /** Отрисовать элемент

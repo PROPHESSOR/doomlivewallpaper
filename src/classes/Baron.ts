@@ -11,7 +11,7 @@ export default class Baron extends Actor {
 
     this.states = [
       'spawn:',
-      (self: Baron) => self.sprite('boss', 1, 1).duration(6).sound('DSBRSSIT'),
+      (self: Baron) => self.sprite('boss', 1, self.direction).duration(6).sound('DSBRSSIT'),
       (self: Baron) => self.sprite('boss', 1, self.direction).duration(6).gotoState('walk'),
       'stop',
   

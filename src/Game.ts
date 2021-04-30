@@ -1,5 +1,6 @@
 import Actors from "./Actors";
 import Baron from "./classes/Baron";
+import Marine from "./classes/Marine";
 import { Vec2 } from "./Utils";
 
 class Background {
@@ -8,6 +9,7 @@ class Background {
   render(bg = 'bg1') {
     const el: HTMLElement = document.querySelector('#main');
 
+    el.style.backgroundSize = 'cover';
     el.style.backgroundImage = `url(res/bg/${bg}.jpg)`;
   }
 
@@ -30,13 +32,14 @@ export class Game {
   run() {
     this.background.render();
     console.log('run()');
+    this.actors.add(new Marine(new Vec2(512, 256)));
     this.actors.add(new Baron(new Vec2(256, 256)));
     this.timer = setInterval(() => this.loop(), 1000 / this.FPS);
   }
 
   private loop() {
     this.tickno++;
-    console.log('tick', this.tickno);
+    // console.log('tick', this.tickno);
     this.actors.tick();
   }
 }
