@@ -1,4 +1,4 @@
-import Game from './src/Main';
+import Game from './src/Game';
 
 Game.run();
 

@@ -1,3 +1,4 @@
+import Actors from "./Actors";
 import Baron from "./classes/Baron";
 import { Vec2 } from "./Utils";
 
@@ -16,20 +17,27 @@ class Background {
 }
 
 export class Game {
-  public background: Background;
+  public background = new Background();
+  public actors = new Actors();
+  private FPS: number;
+  private timer: number;
+  private tickno: number = 0;
 
-  constructor() {
-    this.background = new Background();
+  constructor({ FPS=30 } = {}) {
+    this.FPS = FPS;
   }
 
   run() {
     this.background.render();
     console.log('run()');
-    window['baron'] = new Baron(new Vec2(256, 256));
+    this.actors.add(new Baron(new Vec2(256, 256)));
+    this.timer = setInterval(() => this.loop(), this.FPS / 1000);
   }
 
   private loop() {
-    // TODO:
+    this.tickno++;
+    console.log('tick', this.tickno);
+    this.actors.tick();
   }
 }
 
